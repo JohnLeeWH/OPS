@@ -25,12 +25,12 @@ def run_wrk_process(wrkArgs, website):
         print("no arguments.")
     cmdArgs.append(website)
     print(cmdArgs)
-    proc = subprocess.Popen(cmdArgs, stdout=subprocess.PIPE, bufsize=1)
-    while proc.poll() is None:
+    with subprocess.Popen(cmdArgs, stdout=subprocess.PIPE) as proc:
         for line in proc.stdout:
             print(str(line))
-    # with
+
     # result = subprocess.call(cmdArgs, shell=False)
     # print(result)
     # return result
+
     return True
