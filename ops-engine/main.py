@@ -1,10 +1,11 @@
 import sys
 
 from typing import Optional
+from click import password_option
 
-from fastapi import FastAPI, Form, WebSocket
+from fastapi import FastAPI, Form, WebSocket, Query
 from fastapi.responses import HTMLResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, HttpUrl
 
 from cmd import run_wrk_process, run_ping_process
 
@@ -58,7 +59,26 @@ class WrkArgs(BaseModel):
     header: Optional[str] = None
     latency: Optional[str] = None
     timeout: Optional[str] = None
-    website: str
+    website: HttpUrl
+
+
+class PingArgs(BaseModel):
+    # ping请求内容
+    ip: str = Field(
+        regex=
+        "^((25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))\.){3}(25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))$"
+    )
+
+
+class SSHTarget(BaseModel):
+    # ssh目标请求内容
+    host: str = Field(
+        regex=
+        "^((25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))\.){3}(25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))$"
+    )
+    post: int
+    user: str
+    password: str
 
 
 @app.get("/")
@@ -74,26 +94,39 @@ async def get():
 @app.post("/wrk")
 async def post_wrk(post_args: WrkArgs):
     #
-    print(post_args)
-    wrkArgs = {}
+    #print(post_args)
+    wrk_args = {}
+    if post_args.connections is not None:
+        wrk_args["connections"] = post_args.connections
+    if post_args.duration is not None:
+        wrk_args["duration"] = post_args.duration
+    if post_args.thread is not None:
+        wrk_args["thread"] = post_args.thread
+    if post_args.script is not None:
+        wrk_args["script"] = post_args.script
+    if post_args.header is not None:
+        wrk_args["header"] = post_args.header
+    if post_args.latency is not None:
+        wrk_args["latency"] = post_args.latency
+    if post_args.timeout is not None:
+        wrk_args["timeout"] = post_args.timeout
+
     website = post_args.website
-    result = run_wrk_process(wrkArgs, website)
+    result = run_wrk_process(wrk_args, website)
     return {"result": result}
 
 
-"""
-@app.websocket('/wrkws')
-async def websocket_endpoint(websocket: WebSocket):
-    await websocket.accept()
-    while True:
-        data = await websocket.receive_text()
-        #await websocket.send_text(f"Message text was: {data}")
-        wrkArgs = {}
-        proc = run_wrk_process(wrkArgs, data)
-        for line in proc.stdout:
-            print(str(line))
-            await websocket.send_text(str(line))
-"""
+@app.post("/ping")
+async def post_ping(post_args: PingArgs):
+    #
+    #print(post_args.ip)
+    result = run_ping_process(post_args.ip)
+    return {"result": result}
+
+
+@app.post("/wrk/targetdeploy")
+async def post_wrk_targetdeploy(post_args: SSHTarget):
+    pass
 
 
 @app.websocket('/wrkws')
