@@ -10,3 +10,4 @@ apt-get install -y python3 python3-pip
 pip install fastapi[all]
 apt-get install -y inetutils-ping
 pip install fabric
+apt install iperf3 nmap

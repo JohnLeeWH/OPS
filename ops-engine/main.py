@@ -1,13 +1,14 @@
 import sys
 
 from typing import Optional
+from unittest import result
 from click import password_option
 
 from fastapi import FastAPI, Form, WebSocket, Query
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel, Field, HttpUrl
 
-from cmd import run_wrk_process, run_ping_process
+from cmd import run_wrk_process, run_ping_process, run_iperf_process, run_nmap_process
 
 app = FastAPI()
 
@@ -70,6 +71,22 @@ class PingArgs(BaseModel):
     )
 
 
+class IperfArgs(BaseModel):
+    # iperf3请求内容
+    ip: str = Field(
+        regex=
+        "^((25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))\.){3}(25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))$"
+    )
+
+
+class NmapArgs(BaseModel):
+    # nmap请求内容
+    ip: str = Field(
+        regex=
+        "^((25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))\.){3}(25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))$"
+    )
+
+
 class SSHTarget(BaseModel):
     # ssh目标请求内容
     host: str = Field(
@@ -121,6 +138,26 @@ async def post_ping(post_args: PingArgs):
     #
     #print(post_args.ip)
     result = run_ping_process(post_args.ip)
+    return {"result": result}
+
+
+@app.post("/iperf")
+async def post_iperf(post_args: IperfArgs):
+    #
+    iperf_args = {}
+
+    ip = post_args.ip
+    result = run_iperf_process(iperf_args, ip)
+    return {"result": result}
+
+
+@app.post("/nmap")
+async def post_nmap(post_args: NmapArgs):
+    #
+    nmap_args = {}
+
+    ip = post_args.ip
+    result = run_nmap_process(nmap_args, ip)
     return {"result": result}
 
 

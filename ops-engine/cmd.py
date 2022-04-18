@@ -1,5 +1,4 @@
 import subprocess
-from unittest import result
 
 
 def run_ping_process(ip):
@@ -37,7 +36,7 @@ def run_wrk_process(wrk_args, website):
         print("no arguments.")
 
     cmd_args.append(website)
-    
+
     print(cmd_args)
 
     with subprocess.Popen(cmd_args, stdout=subprocess.PIPE) as proc:
@@ -50,4 +49,51 @@ def run_wrk_process(wrk_args, website):
         print(result)
     return result
 
-    #return True
+
+def run_iperf_process(iperf_args, ip):
+    #
+    cmd_args = ["iperf3"]
+    cmd_args.append("-c")
+    cmd_args.append(ip)
+    if "port" in iperf_args:
+        cmd_args.append("-p " + str(iperf_args["port"]))
+    if "format" in iperf_args:
+        cmd_args.append("-f " + str(iperf_args["format"]))
+    if "interval" in iperf_args:
+        cmd_args.append("-i " + str(iperf_args["interval"]))
+    if "file" in iperf_args:
+        cmd_args.append("-F " + str(iperf_args["file"]))
+
+    if "time" in iperf_args:
+        cmd_args.append("-t " + str(iperf_args["time"]))
+
+    if "parallel" in iperf_args:
+        cmd_args.append("-P " + str(iperf_args["parallel"]))
+    if "reverse" in iperf_args:
+        cmd_args.append("-R ")
+
+    print(cmd_args)
+    with subprocess.Popen(cmd_args, stdout=subprocess.PIPE) as proc:
+        result = proc.stdout.read().strip()
+        print(result)
+    return result
+
+
+def run_nmap_process(nmap_args, ip):
+    #
+    cmd_args = ["nmap"]
+
+    if "verbose" in nmap_args:
+        if nmap_args["verbose"] == "1":
+            cmd_args.append("-v")
+        if nmap_args["verbose"] == "2":
+            cmd_args.append("-vv")
+        if nmap_args["verbose"] == "3":
+            cmd_args.append("vvv")
+
+    cmd_args.append(ip)
+    print(cmd_args)
+    with subprocess.Popen(cmd_args, stdout=subprocess.PIPE) as proc:
+        result = proc.stdout.read().strip()
+        print(result)
+    return result
