@@ -11,3 +11,9 @@ pip install fastapi[all]
 apt-get install -y inetutils-ping
 pip install fabric
 apt install iperf3 nmap
+apt install sudo curl
+
+
+# nodejs
+curl -fsSL https://deb.nodesource.com/setup_current.x | sudo -E bash -
+apt-get install nodejs npm
