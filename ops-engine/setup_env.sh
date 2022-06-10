@@ -1,7 +1,7 @@
 # this script runs on ubuntu
 #!bash
 apt-get update && apt-get install -y locales
-apt install -y make git
+apt install -y make git unzip
 mkdir /home/dev && cd /home/dev
 git clone https://github.com/wg/wrk.git
 cd wrk && make
