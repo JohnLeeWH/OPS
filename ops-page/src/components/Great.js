@@ -5,11 +5,11 @@ import React from "react";
 //}
 
 const Great = (props) => {
-    console.log(props);
+    //console.log(props);
+    const { name, nickName } = props;
     return (
         <div>
-            <h1>Hello {props.name} aka {props.nickName}</h1>
-            <div>{props.children}</div>
+            <h1>Hello {name} aka {nickName}</h1>
         </div>);
 };
 

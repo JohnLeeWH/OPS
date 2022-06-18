@@ -5,13 +5,16 @@ import Welcome from "./components/Welcome";
 import Hello from "./components/hello";
 import Message from "./components/Message";
 import Counter from "./components/Counter";
+import Great from "./components/Great";
+import FunctionClick from "./components/FunctionClick";
+import ClassClick from "./components/ClassClick";
 
 class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <Message />
-        <Counter />
+        <FunctionClick />
+        <ClassClick />
       </div>
     )
   }
