@@ -8,13 +8,13 @@ import Counter from "./components/Counter";
 import Great from "./components/Great";
 import FunctionClick from "./components/FunctionClick";
 import ClassClick from "./components/ClassClick";
+import EventBind from "./components/EventBind";
 
 class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <FunctionClick />
-        <ClassClick />
+        <EventBind />
       </div>
     )
   }
