@@ -12,13 +12,18 @@ import EventBind from "./components/EventBind";
 import ParentComponent from "./components/parentComponent";
 import UserGreeting from "./components/UserGreeting";
 import NameList from "./components/NameList";
+import StyleSheet from "./components/StyleSheet";
+import Inline from "./components/Inline";
+import "./appStyles.css";
+import styles from "./appStyles.module.css"
+import Form from "./components/Form";
 
 class App extends React.Component {
 
   render() {
     return (
       <div className="App">
-        <NameList />
+        <Form />
       </div>
     )
   }
